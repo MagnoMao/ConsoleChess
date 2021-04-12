@@ -47,6 +47,35 @@ namespace ChessConsole.Entities
             Console.Write("  ");
             for (int j = 0; j < Collums; j++) Console.Write((char)('A' + 1) + " ");
         }
+
+        public void DrawPossibleMovements(Piece p)
+        {
+            //Draw the possible move locations with another color
+            bool[,] mat = p.PossibleMovements();
+            ConsoleColor defColor = Console.ForegroundColor;
+            Console.WriteLine("  A B C D E F G H");
+            for (int i = Rows - 1; i >= 0; i--)
+            {
+                Console.Write((i + 1) + " ");
+                for (int j = 0; j < Collums; j++)
+                {
+                    if (i == p.Row && j == p.Collum)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.Write(p);
+                        Console.ForegroundColor = defColor;
+                        continue;
+                    }
+                    if (mat[i, j]) Console.ForegroundColor = ConsoleColor.Red;
+
+                    if (PieceBoard[i, j] != null) Console.Write(PieceBoard[i, j] + " ");
+                    else Console.Write("- ");
+                    Console.ForegroundColor = defColor;
+                }
+                Console.WriteLine((i + 1) + " ");
+            }
+            Console.WriteLine("  A B C D E F G H");
+        }
         public bool ValidPos(int collum, int row)
         {
             if (collum < 0 || collum >= Collums || row < 0 || row >= Rows) return false;
@@ -63,16 +92,14 @@ namespace ChessConsole.Entities
             int[] res = { row, collum };
             return res;
         }
-        public void AddPiece(PieceType type , Color color, char collumChar, int row)
+        public bool AddPiece(Piece p)
         {
-            int[] res = PosConverter(collumChar, row);
-            row = res[0];
-            int collum = res[1];
-            switch (type){
-                case PieceType.King:
-                    PieceBoard[row, collum] = new King( row, collum, color, this);
-                    break;
+            if (PieceBoard[p.Row, p.Collum] == null)
+            {
+                PieceBoard[p.Row, p.Collum] = p;
+                return true;
             }
+            else return false;
         }
         
         public Piece GetPiece(char collumChar, int row)
@@ -83,11 +110,5 @@ namespace ChessConsole.Entities
             return PieceBoard[row, collum];
         }
 
-        public void InitBoard()
-        {
-            //White
-            
-            //Black
-        }
     }
 }

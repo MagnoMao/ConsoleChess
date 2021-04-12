@@ -10,20 +10,21 @@ namespace ChessConsole
         static void Main(string[] args)
         {
             ChessMatch chessMatch = new ChessMatch();
-            chessMatch.GameBoard.AddPiece(PieceType.King, Color.White, 'A', 2);
+            chessMatch.AddPiece(PieceType.King, Color.White, 'A', 2);
 
             while (chessMatch.Match)
             {
                 chessMatch.GameBoard.Draw();
-                Console.WriteLine("Origin: ");
-                string origin = Console.ReadLine();
-                Piece p = chessMatch.GameBoard.GetPiece(origin[0], origin[1]);
+                Piece piece = chessMatch.getPieceToMove();
+                chessMatch.GameBoard.DrawPossibleMovements(piece);
+                //possible ways to do it:
 
-                Console.WriteLine("Target: ");
-                string target = Console.ReadLine();
-                chessMatch.Move(p,target[0], target[1]);
-
-                chessMatch.GameBoard.GetPiece('A', 2).DrawPossibleMovements();
+                //1- have the main program taking and passing the positions and pieces from the chess methods.
+                int[] targetLocation = chessMatch.GetTargetlocation();
+                chessMatch.MovePiece(piece, targetLocation[0], targetLocation[1]);
+                
+                //2- chessMatch have all the variables internally, the main program purpose is just to call
+                //  the correct functions in the correct order.
             }
         }
     }
